@@ -20,9 +20,15 @@ namespace OdeToFood.Controllers
         }
 
         // GET: Restaurants
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([Bind(Prefix = "id")]int restaurantId)
         {
-            return View(await _context.Restaurants.ToListAsync());
+            var restauraunt = await _context.Restaurants.Include(r => r.Review).FirstOrDefaultAsync(m => m.Id == restaurantId);
+            if (restauraunt = null)
+            {
+                return NotFound();
+            }
+
+            return View(restauraunt);
         }
 
         // GET: Restaurants/Details/5
