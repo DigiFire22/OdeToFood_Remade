@@ -13,10 +13,10 @@ namespace OdeToFood.Models
         public int Rating { get; set; }
         [Required]
         [StringLength(1024)]
-        [Display(Name = "Comment: ")]
         public string Body { get; set; }
         [Display(Name = "Username")]
         [DisplayFormat(NullDisplayText = "Anonymous")]
+        [StringLength(1024)]
         public string ReviewerName { get; set; }
         public int RestaurantId { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

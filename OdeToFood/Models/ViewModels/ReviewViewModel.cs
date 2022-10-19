@@ -14,5 +14,6 @@ namespace OdeToFood.Models.ViewModels
         [Required]
         [StringLength(1024)]
         public string Body { get; set; }
+        public int RestaurantId { get; set; }
     }
 }
