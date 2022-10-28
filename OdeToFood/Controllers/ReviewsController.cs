@@ -11,49 +11,44 @@ using System.Threading.Tasks;
 
 namespace OdeToFood.Controllers
 {
-    public class ReviewsController : Controller
-    {
-        private readonly ApplicationDbContext _context;
-       public ReviewsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-        // GET: ReviewsController
-        public async Task<IActionResult> Index([Bind(Prefix = "id")] int restaurantId)
-        {
-            var restaurant = await _context.Restaurants
-                .Include(r => r.Review)
-                .FirstOrDefaultAsync(m => m.Id == restaurantId);
-            if (restaurant == null)
-            {
-                return NotFound();
-            }
+	public class ReviewsController : Controller
+	{
+		private readonly ApplicationDbContext _context;
 
-            return View(restaurant);
-        }
-        [HttpGet]
-        public ActionResult Create(int restaurantId)
-        {
-            return View();
-        }
+		public ReviewsController(ApplicationDbContext context)
+		{
+			_context = context;
+		}
+		// GET: ReviewsController
+		public async Task<IActionResult> Index([Bind(Prefix = "id")] int restaurantId)
+		{
+			var restaurant = await _context.Restaurants
+				.Include(r => r.Review)
+				.FirstOrDefaultAsync(m => m.Id == restaurantId);
+			if (restaurant == null)
+			{
+				return NotFound();
+			}
 
-        [HttpPost]
-        public ActionResult Create(RestarauntReview review)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Reviews.Add(review);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index), new { Id = review.RestaurantId });
-            }
-            return View(review);
-        }
-        [HttpGet]
-        public ActionResult Edit(int id)
-        {
-            var model = _context.Reviews.Find(id);
-            return View(model);
-        }
+			return View(restaurant);
+		}
+
+		[HttpGet]
+		public ActionResult Create(int restaurantId)
+		{
+			return View();
+		}
+		[HttpPost]
+		public ActionResult Create(RestarauntReview review)
+		{
+			if (ModelState.IsValid)
+			{
+				_context.RestaurantReviews.Add(review);
+				_context.SaveChanges();
+				return RedirectToAction(nameof(Index), new { id = review.RestaurantId });
+			}
+			return View(review);
+		}
 
 		public async Task<IActionResult> Edit(int? id)
 		{
@@ -62,7 +57,7 @@ namespace OdeToFood.Controllers
 				return NotFound();
 			}
 
-			var review = await _context.RestarauntReview.FindAsync(id);
+			var review = await _context.RestaurantReviews.FindAsync(id);
 			if (review == null)
 			{
 				return NotFound();
@@ -82,7 +77,7 @@ namespace OdeToFood.Controllers
 			{
 				try
 				{
-					var currentReview = await _context.RestarauntReview.FindAsync(id);
+					var currentReview = await _context.RestaurantReviews.FindAsync(id);
 					currentReview.Body = review.Body;
 					currentReview.Rating = review.Rating;
 					_context.Entry(currentReview).State = EntityState.Modified;
@@ -91,7 +86,7 @@ namespace OdeToFood.Controllers
 				}
 				catch (DbUpdateConcurrencyException)
 				{
-					if (!_context.RestarauntReview.Any(r => r.Id == id))
+					if (!_context.RestaurantReviews.Any(r => r.Id == id))
 					{
 						return NotFound();
 					}
